@@ -177,8 +177,13 @@ namespace CsvHelper.Excel
             if (row.CellsUsed().Any())
             {
                 var result = row.Cells(1 + ColumnOffset, FieldCount + ColumnOffset)
-                    .Select(cell => cell.Value.ToString())
-                    .ToArray();
+                    .Select(cell =>
+                    {
+                        if (cell.DataType == XLDataType.DateTime)
+                            return ((DateTime) cell.Value).ToString("dd/MM/yyyy HH:mm:ss");
+                            
+                        return cell.Value.ToString();
+                    }).ToArray();
                 Row++;
                 return result;
             }
